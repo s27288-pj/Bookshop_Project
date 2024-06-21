@@ -1,0 +1,257 @@
+openapi: 3.0.3
+info:
+  title: Bookshop API
+  version: 1.0.0
+  description: API for a Bookshop Project
+tags:
+  - name: books
+    description: Operations on books
+servers:
+  - url: http://localhost:8080/books
+    description: View, add, update, delete books
+paths:
+  /books:
+    get:
+      tags:
+        - books
+      summary: Get all books
+      operationId: getBooks
+      responses:
+        '200':
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookResponse'
+    post:
+      tags:
+        - books
+      summary: Add a new book
+      operationId: addBook
+      requestBody:
+        description: Book to add
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCreateRequest'
+      responses:
+        '201':
+          description: Book added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+  /books/{id}:
+    get:
+      tags:
+        - books
+      summary: Get a book by ID
+      operationId: getBookById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the book to get
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: A book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+    put:
+      tags:
+        - books
+      summary: Update a book
+      operationId: updateBook
+      parameters:
+        - name: id
+          in: path
+          description: ID of the book to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Book to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookUpdateRequest'
+      responses:
+        '200':
+          description: Book updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResponse'
+    delete:
+      tags:
+        - books
+      summary: Delete a book
+      operationId: deleteBook
+      parameters:
+        - name: id
+          in: path
+          description: ID of the book to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+          '204':
+              description: Book deleted
+  /books/search/{genre}:
+    get:
+      tags:
+        - books
+      summary: Get books by genre
+      operationId: getBooksByGenre
+      parameters:
+        - name: genre
+          in: path
+          description: Genre of the books to get
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BookResponse'
+  /order-report:
+    get:
+      tags:
+        - books
+      summary: Get order report
+      operationId: getOrderReport
+      responses:
+        '200':
+          description: Order report
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderReport'
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        genre:
+          type: string
+        price:
+          type: number
+          format: double
+        pages:
+          type: integer
+          format: int32
+        viewCounter:
+          type: integer
+          format: int32
+        quantity:
+          type: integer
+          format: int32
+        authorId:
+          type: string
+          format: uuid
+
+    Author:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        surname:
+          type: string
+
+    BookCreateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        genre:
+          type: string
+        price:
+          type: number
+          format: double
+        pages:
+          type: integer
+          format: int32
+        quantity:
+          type: integer
+          format: int32
+        authorId:
+          type: string
+          format: uuid
+    BookUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        genre:
+          type: string
+        price:
+          type: number
+          format: double
+        pages:
+          type: integer
+          format: int32
+        quantity:
+          type: integer
+          format: int32
+        authorId:
+          type: string
+          format: uuid
+    BookResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        genre:
+          type: string
+        price:
+          type: number
+          format: double
+        pages:
+          type: integer
+          format: int32
+        quantity:
+          type: integer
+          format: int32
+        author:
+          $ref: '#/components/schemas/Author'
+    OrderReport:
+      type: object
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        bookId:
+          type: string
+          format: uuid
+        orderAmount:
+          type: integer
+          format: int32

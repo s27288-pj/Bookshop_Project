@@ -1,5 +1,5 @@
 
-# My Spring Boot Project
+# Bookshop Spring Boot Project
 
 This project consists of three modules:
 
