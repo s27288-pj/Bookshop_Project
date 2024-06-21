@@ -12,6 +12,8 @@ import pl.bookshop_project.bookshop.Author.Author;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import pl.bookshop_project.bookshop.Exception.InvalidCreateBookDataException;
+import pl.bookshop_project.bookshop.Exception.InvalidBookIdException;
+import pl.bookshop_project.bookshop.Exception.InvalidAuthorIdException;
 import pl.bookshop_project.bookshop.OrderReportClient;
 
 import java.util.List;
@@ -54,11 +56,11 @@ public class BookService {
         return ResponseEntity.ok(bookMapper.toBookResponse(book));
     }
 
-    public ResponseEntity<BookResponse> deleteBook(UUID id) {
+    public ResponseEntity<Void> deleteBook(UUID id) {
         verifyBookId(id);
         Book book = bookRepository.findById(id).orElseThrow();
         bookRepository.delete(book);
-        return ResponseEntity.ok(bookMapper.toBookResponse(book));
+        return ResponseEntity.noContent().build();
     }
 
     public ResponseEntity<List<BookResponse>> getBookByGenre(String genre) {
@@ -87,7 +89,13 @@ public class BookService {
 
     private void verifyBookId(UUID id) {
         if (!bookRepository.existsById(id)) {
-            throw new InvalidCreateBookDataException("Book with ID " + id + " does not exist");
+            throw new InvalidBookIdException("Book with id " + id + " does not exist");
+        }
+    }
+
+    public void verifyAuthorId(UUID id) {
+        if (!authorRepository.existsById(id)) {
+            throw new InvalidAuthorIdException("Author with id " + id + " does not exist");
         }
     }
 }
