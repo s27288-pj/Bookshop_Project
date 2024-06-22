@@ -3,10 +3,7 @@ package pl.bookshop_project.bookshop.Book;
 import com.bookapi.openapi.model.OrderReport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.bookapi.openapi.model.BookCreateRequest;
 import com.bookapi.openapi.model.BookResponse;
 import com.bookapi.openapi.model.BookUpdateRequest;
@@ -36,9 +33,14 @@ public class BookController {
         return bookService.getBook(id);
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BookResponse> updateBook(UUID id, BookUpdateRequest bookUpdateRequest) {
         return bookService.updateBook(id, bookUpdateRequest);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(UUID id) {
+        return bookService.deleteBook(id);
     }
 
     @GetMapping("/search/{genre}")
